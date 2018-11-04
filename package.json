@@ -4,12 +4,12 @@
   "description": "",
   "private": true,
   "scripts": {
-    "test": "echo \"Error: busfahrer\" && exit 1",
     "server": "webpack-dev-server --open",
-    "build": "webpack"
+    "build": "webpack",
+    "deploy": "./deploy.sh"
   },
   "keywords": [],
-  "author": "",
+  "author": "efwe",
   "license": "MIT",
   "devDependencies": {
     "clean-webpack-plugin": "^0.1.19",
