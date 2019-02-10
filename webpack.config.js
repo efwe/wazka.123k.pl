@@ -1,7 +1,7 @@
 const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const CleanWebpackPlugin = require('clean-webpack-plugin');
-const { VueLoaderPlugin } = require('vue-loader');
+const {VueLoaderPlugin} = require('vue-loader');
 
 module.exports = {
     entry: {
@@ -9,7 +9,8 @@ module.exports = {
     },
     devServer: {
         contentBase: './dist'
-    }, plugins: [
+    },
+    plugins: [
         new VueLoaderPlugin(),
         new CleanWebpackPlugin(['dist']),
         new HtmlWebpackPlugin({
@@ -37,7 +38,22 @@ module.exports = {
             },
             {
                 test: /\.vue$/,
-                use: 'vue-loader'
+                use: [{
+                    loader: 'vue-loader',
+                    options: {
+                        transformAssetUrls: {
+                            'img': 'src',
+                            'image': 'xlink:href',
+                            'b-img': 'src',
+                            'b-img-lazy': ['src', 'blank-src'],
+                            'b-card': 'img-src',
+                            'b-card-img': 'img-src',
+                            'b-carousel-slide': 'img-src',
+                            'b-embed': 'src'
+                        }
+                    }
+                }
+                ]
             }
         ]
     }
