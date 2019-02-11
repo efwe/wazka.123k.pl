@@ -8,7 +8,8 @@ module.exports = {
         app: './src/app.js',
     },
     devServer: {
-        contentBase: './dist'
+        contentBase: './dist',
+        port: 9090
     },
     plugins: [
         new VueLoaderPlugin(),
