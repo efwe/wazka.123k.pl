@@ -1,22 +1,25 @@
 import Vue from 'vue'
+import dayJs from 'dayjs'
 import BootstrapVue from 'bootstrap-vue'
 
 import App from './App.vue'
-import Axios from 'axios'
-import JQuery from 'jquery'
 
 import 'bootstrap/dist/css/bootstrap.css'
 import 'bootstrap-vue/dist/bootstrap-vue.css'
 
 Vue.use(BootstrapVue);
 
-export const axios = Axios;
 export const bus = new Vue();
-
-window.$ = JQuery;
-window.JQuery = JQuery;
 
 new Vue({
     el: '#app',
     render: h => h(App)
 });
+
+export const formatDate = function (value) {
+    if (value) {
+        return dayJs(value).format('DD/MM/YYYY HH:MM');
+    }
+};
+
+Vue.filter('formatDate', formatDate);

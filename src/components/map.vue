@@ -1,6 +1,12 @@
 <template>
     <div class="row no-gutters">
 
+        <b-modal v-model="modalShow" hide-footer hide-header>
+            <div class="d-block text-center">
+                <small>Loading...</small>
+            </div>
+        </b-modal>
+
         <b-modal id="loadingModal" hide-footer title="Using Component Methods">
             <div class="d-block text-center">
                 <h3>Hello From My Modal!</h3>
@@ -11,15 +17,14 @@
         <b-alert v-if="error" variant="danger" show>Data Loading Failed</b-alert>
 
         <div class="col-md-2">
-            <b-list-group v-for="route in items">
-                <b-list-group-item href="#" active class="flex-column align-items-start">
+            <b-list-group v-for="route in routes" :key="route.start">
+                <b-list-group-item href="#" v-bind:id="route.id" v-on:click="showRoute(route)"
+                                   v-bind:class="{ 'active' : isSelected(route) }"
+                                   class="flex-column align-items-start">
                     <div class="d-flex w-100 justify-content-between">
                         <h5 class="mb-1">{{ route.title}}</h5>
-                        <small>{{route.start}}}</small>
                     </div>
-                    <p class="mb-1">
-                        {{route.description}}
-                    </p>
+                    <small>{{route.start | formatDate }}</small>
                     <small>{{route.transport}}</small>
                 </b-list-group-item>
             </b-list-group>
@@ -36,16 +41,13 @@
 
 <script>
     import L from 'leaflet'
-    import {axios} from '../app.js'
-    import httpAdapter from 'axios/lib/adapters/http';
-
     export default {
         name: "wipuMap",
         data() {
             return {
-                counter: 0,
-                loading: false,
                 error: null,
+                modalShow: false,
+                selected: null,
                 routes: []
             }
         },
@@ -64,25 +66,31 @@
                 osmLayer.addTo(myMap);
             },
             loadRoutes() {
-                this.$root.$emit('bv::show::modal', 'loadingModal');
-                axios.get('http://localhost:8080/map/tracks', {responseType: 'stream', adapter: httpAdapter})
-                    .then((response) => {
-                        console.log(response.data);
-                        this.routes.push(response.data);
-                        console.log(this.counter++);
-                    })
-                    .finally(() => this.$root.$emit('bv::hide::modal', 'loadingModal'))
-                    .catch(error => {
-                        this.error = error;
-                        console.log(error);
-                    });
+                let eventSource = new EventSource('http://localhost:8080/map/tracks');
+                let that = this;
+                this.modalShow = true;
+
+                eventSource.onerror = function () {
+                    eventSource.close();
+                    that.modalShow = false;
+                };
+                eventSource.addEventListener('track', function (e) {
+                    let data = JSON.parse(e.data);
+                    that.routes.push(data);
+                }, false);
+            },
+            showRoute(route) {
+                console.log(route.id);
+                this.selected = route.id;
+            },
+            isSelected(route) {
+                return route.id === this.selected;
             }
-        },
+        }
     }
 </script>
 <style>
     @import '~leaflet/dist/leaflet.css';
-
 
     #map-container {
         position: relative;
