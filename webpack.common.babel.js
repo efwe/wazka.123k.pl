@@ -1,15 +1,12 @@
-const path = require('path');
-const HtmlWebpackPlugin = require('html-webpack-plugin');
-const CleanWebpackPlugin = require('clean-webpack-plugin');
-const {VueLoaderPlugin} = require('vue-loader');
+import path from 'path'
+import HtmlWebpackPlugin from 'html-webpack-plugin'
+import CleanWebpackPlugin from 'clean-webpack-plugin'
+import {VueLoaderPlugin} from 'vue-loader'
+
 
 module.exports = {
     entry: {
         app: './src/app.js',
-    },
-    devServer: {
-        contentBase: './dist',
-        port: 9090
     },
     plugins: [
         new VueLoaderPlugin(),

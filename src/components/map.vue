@@ -1,7 +1,7 @@
 <template>
     <div class="row no-gutters">
 
-        <b-modal v-model="modalShow" hide-footer hide-header>
+        <b-modal v-model="loadingModal" hide-footer hide-header>
             <div class="d-block text-center">
                 <small>Loading...</small>
             </div>
@@ -41,14 +41,18 @@
 
 <script>
     import L from 'leaflet'
+    import mapApiEndpoint from '../app.js'
+
     export default {
         name: "wipuMap",
         data() {
             return {
                 error: null,
-                modalShow: false,
+                loadingModal: false,
                 selected: null,
-                routes: []
+                routes: [],
+                map: null,
+                trackLayer: null,
             }
         },
         created() {
@@ -59,20 +63,22 @@
         },
         methods: {
             initMap() {
-                let myMap = L.map('map-container').setView([50.8, 20.1], 13);
+                this.map = L.map('map-container').setView([50.8, 20.1], 13);
                 let osmLayer = L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png', {
                     attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
                 });
-                osmLayer.addTo(myMap);
+                osmLayer.addTo(this.map);
+                this.trackLayer = L.layerGroup();
+                this.trackLayer.addTo(this.map);
             },
             loadRoutes() {
-                let eventSource = new EventSource('http://localhost:8080/map/tracks');
+                let eventSource = new EventSource(mapApiEndpoint + '/map/tracks');
                 let that = this;
-                this.modalShow = true;
+                this.loadingModal = true;
 
                 eventSource.onerror = function () {
                     eventSource.close();
-                    that.modalShow = false;
+                    that.loadingModal = false;
                 };
                 eventSource.addEventListener('track', function (e) {
                     let data = JSON.parse(e.data);
@@ -80,8 +86,31 @@
                 }, false);
             },
             showRoute(route) {
-                console.log(route.id);
+
+                let lineOptions = {
+                    radius: 1,
+                    color: '#E23600',
+                    weight: 1,
+                    opacity: 1,
+                    stroke: true,
+                    clickable: true
+                };
+                let that = this;
                 this.selected = route.id;
+                this.trackLayer.clearLayers();
+                let eventSource = new EventSource(mapApiEndpoint + '/map/track/' + route.id + '/points');
+                let polyline = L.polyline([], lineOptions);
+                polyline.addTo(this.trackLayer);
+
+                eventSource.onerror = function () {
+                    eventSource.close();
+                    that.map.fitBounds(polyline.getBounds())
+                };
+
+                eventSource.addEventListener('point', function (e) {
+                    let data = JSON.parse(e.data);
+                    polyline.addLatLng(L.latLng(data.location))
+                }, false);
             },
             isSelected(route) {
                 return route.id === this.selected;

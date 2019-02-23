@@ -11,6 +11,14 @@ Vue.use(BootstrapVue);
 
 export const bus = new Vue();
 
+let map_api_endpoint = 'https://map.123k.org';
+
+if (process.env.NODE_ENV !== "production") {
+    map_api_endpoint = 'http://localhost:8080'
+}
+export default map_api_endpoint;
+
+
 new Vue({
     el: '#app',
     render: h => h(App)
