@@ -98,7 +98,7 @@
                 let that = this;
                 this.selected = route.id;
                 this.trackLayer.clearLayers();
-                let eventSource = new EventSource(mapApiEndpoint + '/map/track/' + route.id + '/points');
+                let eventSource = new EventSource(mapApiEndpoint + '/map/track/' + route.id + '/point-stream');
                 let polyline = L.polyline([], lineOptions);
                 polyline.addTo(this.trackLayer);
 
