@@ -124,7 +124,6 @@
     #map-container {
         position: relative;
         padding: 0;
-        width: max-content;
         height: 1000px;
     }
 </style>
