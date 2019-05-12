@@ -6,6 +6,9 @@
             <b-navbar-nav>
                 <b-nav-item href="#" @click="switchComponent('wipuMap')">Map</b-nav-item>
             </b-navbar-nav>
+            <b-navbar-nav>
+                <b-nav-item href="#" @click="switchComponent('obelometer')">Obelometer</b-nav-item>
+            </b-navbar-nav>
             <!-- Right aligned nav items -->
             <b-navbar-nav class="ml-auto">
                 <b-nav-item-dropdown right>
@@ -21,7 +24,7 @@
 </template>
 
 <script>
-    import {bus} from '../app.js';
+    import {vm} from '../app.js';
 
     export default {
         name: "navbar",
@@ -33,7 +36,7 @@
         },
         methods: {
             switchComponent(comp) {
-                bus.$emit('switchComp', comp);
+                vm.$emit('switchComp', comp);
             }
         },
     }

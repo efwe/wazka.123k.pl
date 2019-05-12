@@ -12,8 +12,9 @@
     import Index from './components/index.vue'
     import WipuMap from './components/map.vue'
     import About from './components/about.vue'
+    import Obelometer from './components/obelometer.vue'
 
-    import {bus} from './app.js'
+    import {vm} from './app.js'
 
     export default {
         el: '#app',
@@ -25,12 +26,13 @@
         },
 
         created() {
-            bus.$on('switchComp', comp => {
+            vm.$on('switchComp', comp => {
                 this.currentComp = comp;
             })
         },
         components: {
             'wipuMap': WipuMap,
+            'obelometer': Obelometer,
             'navbar': Navbar,
             'index': Index,
             'about': About
