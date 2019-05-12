@@ -26,7 +26,7 @@ new Vue({
 
 export const formatDate = function (value) {
     if (value) {
-        return dayJs(value).format('DD/MM/YYYY HH:MM:ss');
+        return dayJs(value).format('DD.MM.YYYY HH:mm:ss');
     }
 };
 

@@ -1,14 +1,13 @@
 <template>
     <div class="row">
-        <div class="col s12 m5">
+        <div class="col-md-5">
             <canvas ref="obelometer-canvas" width="500" height="700"></canvas>
         </div>
-        <div class="col s12 m7">
+        <div class="col-md-7">
             <div class="obelometer-display">
                 <h2>Office Temperature</h2>
-                <span id="temp-display" class="temp-display">{{tempMsg.temperature.value}}</span>
-                <span id="deg-display" class="deg-display">&deg;</span>
-                <span id="time-display" class="time-display">{{tempMsg.time}}</span>
+                <span class="temp-display">{{tempMsg.temperature.value}}&deg;</span>
+                <span class="time-display">{{tempMsg.time | formatDate }}</span>
             </div>
         </div>
     </div>
@@ -81,18 +80,14 @@
         font-family: "Consolas", "Bitstream Vera Sans Mono", "Courier New", Courier, monospace;
         font-weight: bolder;
         font-size: 8em;
+        display:block;
     }
-
-    .deg-display {
-        font-family: "Consolas", "Bitstream Vera Sans Mono", "Courier New", Courier, monospace;
-        font-weight: bolder;
-        font-size: 8em;
-    }
-
 
     .time-display {
         font-family: "Consolas", "Bitstream Vera Sans Mono", "Courier New", Courier, monospace;
         font-weight: bolder;
-        font-size: 2em;
+        font-size: 3em;
+        display:block;
     }
+
 </style>
